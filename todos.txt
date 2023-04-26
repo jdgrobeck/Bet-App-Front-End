@@ -1,0 +1,20 @@
+4/13
+
+1. I want to get the average odds using optional chaining. Use Taz's code for reference. Do I need to make separate components?
+
+2. Make a button that does an axios put, sending game_id, commence_time, sport and the team they chose. I believe this will be two separate buttons with only the team being different. to my databse. How do I do that?
+
+4/15
+
+I have a function that sends either the home team pick or away team pick based on which button the user clicks. Does this need to be a post method for bets in my backend?
+
+How do I ensure this goes to the bets table?
+
+4/18
+
+1. Create a signin page
+-- User sees games once logged in
+
+2. Create a register user page
+-- Sends new user to database
+
