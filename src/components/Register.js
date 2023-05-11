@@ -6,7 +6,7 @@ import axios from 'axios'
 
 export default function Register(props) {
 
-  const appPath = process.env.NODE_ENV !== 'production' ? 'http://localhost:4001/' : 'https://capstone-planning.vercel.app/' 
+  const appPath = process.env.NODE_ENV === 'Production' ? 'http://localhost:4001/' : 'https://capstone-planning.vercel.app/' 
   console.log(appPath)
   console.log(process.env)
 

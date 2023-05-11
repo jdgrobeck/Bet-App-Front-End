@@ -6,8 +6,25 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { format, parseISO, isToday } from 'date-fns';
 
-const Games = () => {
+// const authToken = localStorage.getItem("authToken");
 
+// const config = {
+//   headers: { Authorization: `Bearer ${authToken}` },
+// };
+
+// axios.get("/dashboard", config)
+//   .then((response) => {
+//     console.log(response.data);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+  
+
+
+const Games = () => {
+console.log(localStorage)
 const [nba, setNba] = useState([]);
 //This is where we store a selected game
 const [selectedGame, setSelectedGame] = useState(null);
@@ -21,6 +38,8 @@ const [homeSpread, setHomeSpread] = useState(null); // Added state for spread
 
 
   }, []); // empty array ensures that the effect runs only once, when the component is mounted.
+
+  
 
   let awayTeamBetData = null;
   let homeTeamBetData = null;
@@ -48,34 +67,53 @@ const [homeSpread, setHomeSpread] = useState(null); // Added state for spread
       setHomeSpread(null);
     }
 
-    homeTeamBetData = selectedGame ? {
-      game_id: selectedGame.id,
-      commence_time: selectedGame.commence_time,
-      sport: selectedGame.sport_title,
-      pick: selectedGame.home_team,
-      spread: homeSpread // assuming homeSpread is already set by the previous logic
-    } : null;
+    // homeTeamBetData = selectedGame ? {
+    //   user_id: localStorage,
+    //   game_id: selectedGame.id,
+    //   commence_time: selectedGame.commence_time,
+    //   // IT's sport_title in the API but sport in my db. Which one do I use?
+    //   sport: selectedGame.sport_title,
+    //   pick: selectedGame.home_team,
+    //   spread: homeSpread // assuming homeSpread is already set by the previous logic
+    // } : null;
   
-    awayTeamBetData = selectedGame ? {
-      game_id: selectedGame.id,
-      commence_time: selectedGame.commence_time,
-      sport: selectedGame.sport_title,
-      pick: selectedGame.away_team,
-      spread: awaySpread // assuming awaySpread is already set by the previous logic
-    } : null;
+    // awayTeamBetData = selectedGame ? {
+    //   user_id: localStorage,
+    //   game_id: selectedGame.id,
+    //   commence_time: selectedGame.commence_time,
+    //   sport: selectedGame.sport_title,
+    //   pick: selectedGame.away_team,
+    //   spread: awaySpread // assuming awaySpread is already set by the previous logic
+    // } : null;
     
     
 
 
 } // end of handleSelectedGame
 
-const betsUrl = "https://capstone-planning.vercel.app/bets"
-
-
 // if home team is picked, send this betsData with pick: selectedGame.home_team. Else send pick: selectedGame.away_team. How do I differentiate the buttons?
 // I believe I could also define homeTeamBetData and awayTeamBetData outside of handleSelectedGame and pass them as parameters to handleWinnerPick
 
 const handleWinnerPick = (event) => {
+  const betsUrl = "https://capstone-planning.vercel.app/bets"
+  homeTeamBetData = selectedGame ? {
+    user_id: localStorage.getItem("user id"),
+    game_id: selectedGame.id,
+    commence_time: selectedGame.commence_time,
+    // IT's sport_title in the API but sport in my db. Which one do I use?
+    sport: selectedGame.sport,
+    pick: selectedGame.home_team,
+    spread: homeSpread // assuming homeSpread is already set by the previous logic
+  } : null;
+
+  awayTeamBetData = selectedGame ? {
+    user_id: localStorage.getItem("user id"),
+    game_id: selectedGame.id,
+    commence_time: selectedGame.commence_time,
+    sport: selectedGame.sport,
+    pick: selectedGame.away_team,
+    spread: awaySpread // assuming awaySpread is already set by the previous logic
+  } : null;
   // This prevents page from loading automatically
   event.preventDefault()
 

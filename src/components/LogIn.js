@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import axios from 'axios';
 
 
 
@@ -26,21 +27,38 @@ export default function LogIn(props) {
     });
   };
 
-  // CHALLENGE 
-  // The Nav button should say Log in when there's no cookie
-  // After login, the cookie is set and the NAV button should say Log Out
-  // When logged out, the cookie should either be deleted or set to ""
+  
 
   const login = (e) => {
+    const url = "https://capstone-planning.vercel.app/login"
+    
     e.preventDefault();
+    axios.post(url, {
+      username: state.username,
+      password: state.password
+    })
+    .then(response => {
+      // let userId = response.data.userId;
+      console.log('Data sent successfully:', response.data.userId);
+      localStorage.setItem("user id", response.data.userId);
+      
+      document.cookie = "loggedIn=true;max-age=60*1000"
+      navigate("/dashboard");
+      // Handle success, such as showing a success message, updating state, etc.
+    })
+    .catch(error => {
+      console.error('Error sending data:', error);
+      window.alert("Login failed. Try again.")
+      // Handle error, such as showing an error message, etc.
+    });
     // set cookie here
     // set loggedIn = true and max-age = 60*1000 (one minute)
 
     //max-age is when the cookies expire. Counts in miliseconds. 60*1000 is a minute
-    document.cookie = "loggedIn=true;max-age=60*1000"
-
-    navigate("/dashboard");
+   
   };
+
+  
 
   return (
     <Box 
