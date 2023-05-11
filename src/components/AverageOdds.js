@@ -1,4 +1,4 @@
-// I need to 
+// Saved code to add average odds later
 const arrAvg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
 
 //mapping over the game the user selected
