@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-
+import "../App.css";
 
 
 
@@ -42,7 +42,8 @@ export default function LogIn(props) {
       console.log('Data sent successfully:', response.data.userId);
       localStorage.setItem("user id", response.data.userId);
       
-      document.cookie = "loggedIn=true;max-age=60*1000"
+      document.cookie = "loggedIn=true; max-age=3600"
+      console.log(document.cookie)
       navigate("/dashboard");
       // Handle success, such as showing a success message, updating state, etc.
     })
@@ -62,19 +63,24 @@ export default function LogIn(props) {
 
   return (
     <Box 
-        sx={{
-          display: "grid",
-          maxWidth: 300,
-          gridGap: "10px",
-          margin: "65px auto"
-        }}
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "100vh",
+      
+      
+    }}
         noValidate
         autoComplete="off"    
+        // style={{ display: "flex", flexDirection: "column", justifyContent: "center"}}
     
-    
-    >
-     
-        <form className="login-form" onSubmit={login}>
+    >    <div className="site-title">
+          <h1>NBA Sportsbook</h1>
+         </div>
+        <form className="login-form" onSubmit={login} style={{ display: "flex", flexDirection: "column", border: "1px solid lightgrey", borderRadius: "4px", padding: "16px", backgroundColor: "lightgrey"}} >
+         
           <TextField
             required
             onChange={handleTextChange}
@@ -82,6 +88,7 @@ export default function LogIn(props) {
             name="username"
             label="Username"
             type="text"
+            sx={{ mb: 2, backgroundColor: "white" }}
           />
           <TextField
             required
@@ -90,9 +97,10 @@ export default function LogIn(props) {
             name="password"
             label="Password"
             type="password"
+            sx={{ mb: 2, backgroundColor: "white" }}
           />
-          <Link to='/register' style={{ textDecoration: 'none' }}>
-          <Typography>
+          <Link to='/register' style={{ textDecoration: 'none', color: "blue" }}>
+          <Typography sx={{ mb: 2 }}>
             New User? Register Here
           </Typography>
           </Link>
@@ -107,6 +115,8 @@ export default function LogIn(props) {
         </form>
     </Box>
   );
+
+}
 
   // return (
   //   <Box
@@ -131,4 +141,3 @@ export default function LogIn(props) {
   //     <Button variant="contained" onClick={login()}>Log In</Button>
   //   </Box>
   // );
-}

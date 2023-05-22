@@ -5,6 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { format, parseISO, isToday } from 'date-fns';
+import "../App.css";
 
 // const authToken = localStorage.getItem("authToken");
 
@@ -32,7 +33,7 @@ const [nba, setNba] = useState([]);
 const [selectedGame, setSelectedGame] = useState(null);
 const [awaySpread, setAwaySpread] = useState(null); // Added state for spread
 const [homeSpread, setHomeSpread] = useState(null); // Added state for spread
-const [bets, setBets] = useState([])
+const [bets, setBets] = useState({})
 // const [odds, setOdds] = useState([]);
 
 const userId = localStorage.getItem("user id")
@@ -110,22 +111,19 @@ let homeTeamBetData = null;
 // if home team is picked, send this betsData with pick: selectedGame.home_team. Else send pick: selectedGame.away_team. How do I differentiate the buttons?
 // I believe I could also define homeTeamBetData and awayTeamBetData outside of handleSelectedGame and pass them as parameters to handleWinnerPick
 
-const homeTeam = selectedGame.home_team
-const awayTeam = selectedGame.away_team
+
 
 const handleWinnerPick = (event) => {
   const betsUrl = "https://capstone-planning.vercel.app/bets"
-
-  // const homeTeam = selectedGame ? selectedGame.home_team : null;
-  // const awayTeam = selectedGame ? selectedGame.away_team : null;
   
   
   homeTeamBetData = selectedGame ? {
     user_id: userId,
     game_id: selectedGame.id,
     commence_time: selectedGame.commence_time,
-    home_team: homeTeam,
-    away_team: awayTeam,
+    // It's not capturing anything here no matter what I put
+    home_team: selectedGame.home_team,
+    away_team: selectedGame.away_team,
     // IT's sport_title in the API but sport in my db. Which one do I use?
     sport: selectedGame.sport_title,
     pick: selectedGame.home_team,
@@ -137,8 +135,8 @@ const handleWinnerPick = (event) => {
     game_id: selectedGame.id,
     commence_time: selectedGame.commence_time,
     //Why isn't it capturing this?
-    // home_team: selectedGame.home_team,
-    // away_team: selectedGame.away_team,
+    home_team: selectedGame.home_team,
+    away_team: selectedGame.away_team,
     sport: selectedGame.sport_title,
     pick: selectedGame.away_team,
     spread: awaySpread // assuming awaySpread is already set by the previous logic
@@ -181,7 +179,9 @@ const todaysGames = nba.filter(game => isToday(parseISO(game.commence_time)));
   
 
   return (
-    <div>
+    <div className="games-container">
+    <div className="games">
+
       <h1>Daily NBA Bets</h1>
       <select onChange={handleSelectedGame}>
         <option value = "">Pick a Game</option>
@@ -201,7 +201,7 @@ const todaysGames = nba.filter(game => isToday(parseISO(game.commence_time)));
       had to change initial state of selected game to null*/}
       {selectedGame && (
         <div>
-          <h2>{`${selectedGame.away_team} @ ${selectedGame.home_team}`}</h2>
+          <h3>{`${selectedGame.away_team} @ ${selectedGame.home_team}`}</h3>
           <p>Spread for {selectedGame.away_team}: {awaySpread}</p>
           <p>Spread for {selectedGame.home_team}: {homeSpread}</p>
           <button value="away-team-pick" onClick={handleWinnerPick}>Pick {selectedGame.away_team}</button>
@@ -212,8 +212,7 @@ const todaysGames = nba.filter(game => isToday(parseISO(game.commence_time)));
 
 {/* This works, but the data in the fetched data is wrong */}
 <h2>My Bets</h2>
-{bets
-  ?.filter(bet => {
+{bets?.filter(bet => {
     const currentDate = new Date();
     const betDate = new Date(bet.commence_time);
     return betDate.getDate() === currentDate.getDate() &&
@@ -221,14 +220,19 @@ const todaysGames = nba.filter(game => isToday(parseISO(game.commence_time)));
            betDate.getFullYear() === currentDate.getFullYear();
   })
   .slice(-1)
-  .map((bet, index) => (
-    <div key={index}>
-      <h3>{bet.away_team} @ {bet.home_team}</h3>
-      <p>Date: {bet.commence_time}</p>
-      <p>Pick: {bet.pick}</p>
-      <p>Spread: {bet.spread}</p>
-    </div>
-  ))
+  .map((bet, index) => {
+    const commenceTime = new Date(bet.commence_time);
+    const timeOptions = { hour: 'numeric', minute: 'numeric' };
+    const formattedTime = commenceTime.toLocaleTimeString([], timeOptions);
+    return (
+      <div key={index}>
+        <h3>{bet.away_team} @ {bet.home_team}</h3>
+        <p>Date: {commenceTime.toLocaleDateString()}, {formattedTime}</p>
+        <p>Pick: {bet.pick}</p>
+        <p>Spread: {bet.spread}</p>
+      </div>
+    );
+  })
 }
 
        {/* <h2>My Bets</h2>
@@ -240,7 +244,7 @@ const todaysGames = nba.filter(game => isToday(parseISO(game.commence_time)));
             <p>Spread: {bet.spread}</p>
           </div>
       ))}  */}
-     
+      </div>
       </div>
   )
 

@@ -34,6 +34,7 @@ const Router = () => {
         <Routes>
             {/* <Route path="/" element={<ProtectedRoute component={Home} />} /> */}
             <Route path="/" element={<LogIn />} />
+            <Route path="/login" element={<LogIn />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<ProtectedRoute component={Games} />} />
         </Routes>    

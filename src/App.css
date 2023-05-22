@@ -1,0 +1,55 @@
+body {
+    background-image: url("../imgs/NBA_JAM.jpeg") ;
+}
+
+@font-face {
+    font-family: 'He\'s on Fire';
+    src: url("../fonts/hes-on-fire.ttf") format('truetype');
+  }
+
+.site-title {
+    display: flex;
+    flex-direction: column;
+    margin-top: -10%;
+    margin-bottom: -2%;
+}
+
+.site-title h1 {
+    font-family: 'He\'s on Fire', sans-serif;
+    color: red;
+    font-size: 150px;
+    -webkit-text-stroke: 1px black; /* for WebKit-based browsers */
+  /* -text-stroke: 1px red; standard property */
+  -webkit-text-fill-color: solid blue; /* for WebKit-based browsers */
+  /* color: transparent; standard property */
+  }
+
+.games-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+}
+
+.games {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* min-height: 100vh; */
+    width: 50vh;
+    border: 1px solid lightgrey;
+    border-radius: 4px;
+    padding: 16px;
+    background-color: lightgrey;
+  }
+
+.games h1 {
+  font-family: 'He\'s on Fire', sans-serif;
+  color: red;
+  font-size: 100px;
+  -webkit-text-stroke: 1px black; /* for WebKit-based browsers */
+  /* -text-stroke: 1px red; standard property */
+  -webkit-text-fill-color: solid blue; /* for WebKit-based browsers */
+  /* color: transparent; standard property */
+  }
