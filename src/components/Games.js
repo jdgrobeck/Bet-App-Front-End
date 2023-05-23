@@ -1,5 +1,3 @@
-
-
 // const basketballOdds = 'https://api.the-odds-api.com/v4/sports/basketball_nba/odds?apiKey=58d801718116db2c8282a6568a9ebcaa&regions=us&oddsFormat=american'
 
 import React, { useState, useEffect } from 'react';
@@ -33,7 +31,7 @@ const [nba, setNba] = useState([]);
 const [selectedGame, setSelectedGame] = useState(null);
 const [awaySpread, setAwaySpread] = useState(null); // Added state for spread
 const [homeSpread, setHomeSpread] = useState(null); // Added state for spread
-const [bets, setBets] = useState({})
+const [bets, setBets] = useState([])
 // const [odds, setOdds] = useState([]);
 
 const userId = localStorage.getItem("user id")
@@ -174,81 +172,102 @@ window.alert("Bet submitted. Good luck!")
 window.location.reload()
 }
 
+const deleteBet = (event) => {
+  const betId = event.target.dataset.betId; // Get the ID of the bet from the button's dataset
+
+  const betsUrl = `https://capstone-planning.vercel.app/bets/${betId}`; // Append the bet ID to the URL
+
+  axios
+    .delete(betsUrl)
+    .then(response => {
+      console.log('Bet deleted successfully:', response.data);
+      // Handle success, such as showing a success message, updating state, etc.
+    })
+    .catch(error => {
+      console.error('Error deleting bet:', error);
+      // Handle error, such as showing an error message, etc.
+      window.alert("An error occurred while deleting the bet.");
+    });
+
+  // Reload the page to reflect the updated bet list
+  window.alert("Bet deleted.");
+  window.location.reload();
+}
+
 // filtering out based on the current date
 const todaysGames = nba.filter(game => isToday(parseISO(game.commence_time)));
   
 
-  return (
-    <div className="games-container">
-    <div className="games">
-
-      <h1>Daily NBA Bets</h1>
-      <select onChange={handleSelectedGame}>
-        <option value = "">Pick a Game</option>
-        {todaysGames.map((game, index) => {
-           const tipOff = parseISO(game.commence_time);
-           const date = format(tipOff, 'MM/dd/yyyy');
-           const time = format(tipOff, 'hh:mm a');
-           const onTonight = `${game.away_team} @ ${game.home_team} ${date} ${time}`;
-             return (
-               <option key={index} value={game.id}>
-                 {onTonight}
-               </option>
-          )
-        })}
-      </select>
-      {/* Why am I getting undefined @ undefined when the page initially loads? 
-      had to change initial state of selected game to null*/}
-      {selectedGame && (
-        <div>
-          <h3>{`${selectedGame.away_team} @ ${selectedGame.home_team}`}</h3>
-          <p>Spread for {selectedGame.away_team}: {awaySpread}</p>
-          <p>Spread for {selectedGame.home_team}: {homeSpread}</p>
-          <button value="away-team-pick" onClick={handleWinnerPick}>Pick {selectedGame.away_team}</button>
-          <button value="home-team-pick" onClick={handleWinnerPick}>Pick {selectedGame.home_team}</button>
-          {/* <p>Spread for {selectedGame.home_team}: {spread[1][2]}</p> */}
-        </div>
-      )}
-
-{/* This works, but the data in the fetched data is wrong */}
-<h2>My Bets</h2>
-{bets?.filter(bet => {
-    const currentDate = new Date();
-    const betDate = new Date(bet.commence_time);
-    return betDate.getDate() === currentDate.getDate() &&
-           betDate.getMonth() === currentDate.getMonth() &&
-           betDate.getFullYear() === currentDate.getFullYear();
-  })
-  .slice(-1)
-  .map((bet, index) => {
-    const commenceTime = new Date(bet.commence_time);
-    const timeOptions = { hour: 'numeric', minute: 'numeric' };
-    const formattedTime = commenceTime.toLocaleTimeString([], timeOptions);
-    return (
-      <div key={index}>
-        <h3>{bet.away_team} @ {bet.home_team}</h3>
-        <p>Date: {commenceTime.toLocaleDateString()}, {formattedTime}</p>
-        <p>Pick: {bet.pick}</p>
-        <p>Spread: {bet.spread}</p>
-      </div>
-    );
-  })
-}
-
-       {/* <h2>My Bets</h2>
-      {bets?.map((bet, index) => (
+return (
+  <div className="games-container">
+   <div className={`${bets.length > 0 ? 'games-wrapper' : 'no-bets-games-wrapper'}`}>
+      <div className="games">
+        <h1>Daily NBA Bets</h1>
+        <select onChange={handleSelectedGame}>
+          <option value="">Pick a Game</option>
+          {todaysGames.map((game, index) => {
+            const tipOff = parseISO(game.commence_time);
+            const date = format(tipOff, 'MM/dd/yyyy');
+            const time = format(tipOff, 'hh:mm a');
+            const onTonight = `${game.away_team} @ ${game.home_team} ${date} ${time}`;
+            return (
+              <option key={index} value={game.id}>
+                {onTonight}
+              </option>
+            );
+          })}
+        </select>
+        {/* Why am I getting undefined @ undefined when the page initially loads? 
+          had to change initial state of selected game to null*/}
+        {selectedGame && (
           <div>
-            <h3>{bet.away_team} @ {bet.home_team}</h3>
-            <p>Date: {bet.commence_time}</p>
-            <p>Pick: {bet.pick}</p>
-            <p>Spread: {bet.spread}</p>
+            <h3>{`${selectedGame.away_team} @ ${selectedGame.home_team}`}</h3>
+            <p>Spread for {selectedGame.away_team}: {awaySpread}</p>
+            <p>Spread for {selectedGame.home_team}: {homeSpread}</p>
+            <button value="away-team-pick" onClick={handleWinnerPick}>Pick {selectedGame.away_team}</button>
+            <button value="home-team-pick" onClick={handleWinnerPick}>Pick {selectedGame.home_team}</button>
+            {/* <p>Spread for {selectedGame.home_team}: {spread[1][2]}</p> */}
           </div>
-      ))}  */}
+        )}
       </div>
-      </div>
-  )
+    </div>
+    
 
-};
+    {/* This works, but the data in the fetched data is wrong */}
+    {bets && bets.length > 0 ? (
+      <div className="bets-container">
+        <div className="bets">
+          <h2>My Bets</h2>
+          {bets
+            .filter((bet) => {
+              const currentDate = new Date();
+              const betDate = new Date(bet.commence_time);
+              return (
+                betDate.getDate() === currentDate.getDate() &&
+                betDate.getMonth() === currentDate.getMonth() &&
+                betDate.getFullYear() === currentDate.getFullYear()
+              );
+            })
+            .map((bet, index) => {
+              const commenceTime = new Date(bet.commence_time);
+              const timeOptions = { hour: 'numeric', minute: 'numeric' };
+              const formattedTime = commenceTime.toLocaleTimeString([], timeOptions);
+              return (
+                <div key={index}>
+                  <h3>{bet.away_team} @ {bet.home_team}</h3>
+                  <p>Date: {commenceTime.toLocaleDateString()}, {formattedTime}</p>
+                  <p>Pick: {bet.pick}</p>
+                  <p>Spread: {bet.spread}</p>
+                  <button onClick={deleteBet} data-bet-id={bet.id}>Delete Bet</button>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    ) : null }
+  </div>
+);
+}
 export default Games;
 
 

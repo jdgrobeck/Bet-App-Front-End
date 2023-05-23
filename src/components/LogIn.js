@@ -32,6 +32,7 @@ export default function LogIn(props) {
   const login = (e) => {
     const url = "https://capstone-planning.vercel.app/login"
     
+    
     e.preventDefault();
     axios.post(url, {
       username: state.username,
@@ -41,9 +42,7 @@ export default function LogIn(props) {
       // let userId = response.data.userId;
       console.log('Data sent successfully:', response.data.userId);
       localStorage.setItem("user id", response.data.userId);
-      
       document.cookie = "loggedIn=true; max-age=3600"
-      console.log(document.cookie)
       navigate("/dashboard");
       // Handle success, such as showing a success message, updating state, etc.
     })

@@ -25,12 +25,12 @@ const Navigation = () => {
 
   return (
     <>
-    <AppBar position="relative">
+    <AppBar position="relative" className="nav-bar">
       <Toolbar className="nav-bar">
-        <Typography variant="h6" style={{ flexGrow: "1" }}>
-          Place Your Bets!
-        </Typography>
-        <ul className="nav-list" style={{ listStyle: "none"}}>
+      <Typography variant="h6" style={{ fontFamily: "'He\\'s on Fire', sans-serif", color: "red", fontSize: "50px", WebkitTextStroke: "3px black", WebkitTextFillColor: "solid blue" }}>
+        NBA Sportsbook
+      </Typography>
+        <ul className="nav-list" style={{ listStyle: "none", marginLeft: "auto"}}>
           {/* <li>
             <Link to="/listings" className="nav-item">Listings</Link>
           </li>
@@ -39,7 +39,7 @@ const Navigation = () => {
           </li> : ""} */}
           <li>
             <Link 
-            to="/login" onClick={deleteCookie} className="nav-item" style={{ textDecoration: "none", margin: "0 20px", color: "white"}}>Logout
+            to="/login" onClick={deleteCookie} className="nav-item" style={{ textDecoration: "none", margin: "0 20px", fontFamily: "'He\\'s on Fire', sans-serif", color: "red", fontSize: "50px", WebkitTextStroke: "3px black", WebkitTextFillColor: "solid blue"}}>Logout
             </Link>
           </li>
         </ul>

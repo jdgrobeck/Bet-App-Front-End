@@ -3,14 +3,15 @@ import './App.css';
 import { BrowserRouter } from 'react-router-dom';
 import Router from './Router';
 import Navigation from './components/Navigation';
+import cookie from "cookie"
 
 
 function App() {
-  const loggedIn = document.cookie.includes('loggedIn=true');
+  const cookies = cookie.parse(document.cookie);
   return (
     <div className="App">
       <BrowserRouter>
-      {loggedIn && <Navigation />}
+      {cookies["loggedIn"] ? <Navigation /> : ""}
       <Router />
       </BrowserRouter>
     </div>
