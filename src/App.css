@@ -111,3 +111,25 @@ body {
 .nav-bar {
   background-color: rgb(72, 51, 210);
 }
+
+
+.selected-game-button {
+  margin-right: 15px;
+  background-color: rgb(72, 51, 210);
+  color: white;
+}
+
+.delete-bet-button {
+  margin-right: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.delete-bet-button button {
+  background-color: rgb(72, 51, 210);
+  color: white;
+}
+
+.nav-list {
+  display: flex;
+}

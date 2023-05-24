@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { format, parseISO, isToday } from 'date-fns';
+import { format, parseISO, isToday, isAfter, startOfToday } from 'date-fns';
 import "../App.css";
 
 // const authToken = localStorage.getItem("authToken");
@@ -72,10 +72,11 @@ let homeTeamBetData = null;
     //Why am I getting undefined without choosing a game?
   
     if (selectedGame) {
-      const awaySpread = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[0]?.point ?? null;
+      //Flipped [1]?.point ?? from home spread to away spread
+      const awaySpread = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[1]?.point ?? null;
     setAwaySpread(awaySpread);
 
-    const homeSpread = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[1]?.point ?? null;
+    const homeSpread = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[0]?.point ?? null;
     setHomeSpread(homeSpread);
     } else {
       setAwaySpread(null);
@@ -195,17 +196,19 @@ const deleteBet = (event) => {
 }
 
 // filtering out based on the current date
-const todaysGames = nba.filter(game => isToday(parseISO(game.commence_time)));
-  
+// Might leave this out to have more options.
+// const todaysGames = nba.filter(game => isToday(parseISO(game.commence_time)));
+
+const currentDate = startOfToday();
 
 return (
   <div className="games-container">
-   <div className={`${bets.length > 0 ? 'games-wrapper' : 'no-bets-games-wrapper'}`}>
+   <div className={`${bets.some(bet => isAfter(parseISO(bet.commence_time), currentDate)) ? 'games-wrapper' : 'no-bets-games-wrapper'}`}>
       <div className="games">
-        <h1>Daily NBA Bets</h1>
+        <h1>Games</h1>
         <select onChange={handleSelectedGame}>
           <option value="">Pick a Game</option>
-          {todaysGames.map((game, index) => {
+          {nba.map((game, index) => {
             const tipOff = parseISO(game.commence_time);
             const date = format(tipOff, 'MM/dd/yyyy');
             const time = format(tipOff, 'hh:mm a');
@@ -224,8 +227,8 @@ return (
             <h3>{`${selectedGame.away_team} @ ${selectedGame.home_team}`}</h3>
             <p>Spread for {selectedGame.away_team}: {awaySpread}</p>
             <p>Spread for {selectedGame.home_team}: {homeSpread}</p>
-            <button value="away-team-pick" onClick={handleWinnerPick}>Pick {selectedGame.away_team}</button>
-            <button value="home-team-pick" onClick={handleWinnerPick}>Pick {selectedGame.home_team}</button>
+            <button value="away-team-pick" onClick={handleWinnerPick} className="selected-game-button">Pick {selectedGame.away_team}</button>
+            <button value="home-team-pick" onClick={handleWinnerPick} className="selected-game-button">Pick {selectedGame.home_team}</button>
             {/* <p>Spread for {selectedGame.home_team}: {spread[1][2]}</p> */}
           </div>
         )}
@@ -234,20 +237,21 @@ return (
     
 
     {/* This works, but the data in the fetched data is wrong */}
-    {bets && bets.length > 0 ? (
+    {bets && bets.some(bet => isAfter(parseISO(bet.commence_time), currentDate)) ? (
       <div className="bets-container">
         <div className="bets">
           <h2>My Bets</h2>
           {bets
-            .filter((bet) => {
-              const currentDate = new Date();
-              const betDate = new Date(bet.commence_time);
-              return (
-                betDate.getDate() === currentDate.getDate() &&
-                betDate.getMonth() === currentDate.getMonth() &&
-                betDate.getFullYear() === currentDate.getFullYear()
-              );
-            })
+            // Might cut this out
+            // .filter((bet) => {
+            //   const currentDate = new Date();
+            //   const betDate = new Date(bet.commence_time);
+            //   return (
+            //     betDate.getDate() === currentDate.getDate() &&
+            //     betDate.getMonth() === currentDate.getMonth() &&
+            //     betDate.getFullYear() === currentDate.getFullYear()
+            //   );
+            // })
             .map((bet, index) => {
               const commenceTime = new Date(bet.commence_time);
               const timeOptions = { hour: 'numeric', minute: 'numeric' };
@@ -258,7 +262,9 @@ return (
                   <p>Date: {commenceTime.toLocaleDateString()}, {formattedTime}</p>
                   <p>Pick: {bet.pick}</p>
                   <p>Spread: {bet.spread}</p>
-                  <button onClick={deleteBet} data-bet-id={bet.id}>Delete Bet</button>
+                  <div className="delete-bet-button">
+                    <button onClick={deleteBet} data-bet-id={bet.id}>Delete Bet</button>
+                  </div>
                 </div>
               );
             })}

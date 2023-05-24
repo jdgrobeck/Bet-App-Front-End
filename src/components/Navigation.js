@@ -10,17 +10,30 @@ import cookie from "cookie";
 
 const Navigation = () => {
   const navigate = useNavigate();
-  const cookies = cookie.parse(document.cookie);
+  // const [loggedIn, setLoggedIn] = useState(false);
+
+
+  // useEffect(() => {
+  //   const cookies = cookie.parse(document.cookie);
+  //   setLoggedIn(cookies["loggedIn"] === "true");
+  // }, []);
 
   const deleteCookie = () => {
-    if(cookies["loggedIn"]){
-      document.cookie = "loggedIn=null; max-age=0";
+    document.cookie = "loggedIn=null; max-age=0";
+    navigate('/login');
+    // if(cookies["loggedIn"]){
+    //   document.cookie = "loggedIn=null; max-age=0";
     //   console.log("deleteCookie", props.user.user.username);
     //   props.changeUserName("");
-      navigate('/login');
-    } else {
-      navigate('/login');
-    }
+    //   navigate('/login');
+    // } else {
+    //   navigate('/login');
+    // }
+  }
+  const cookies = cookie.parse(document.cookie);
+
+  if (!cookies["loggedIn"]) {
+    return null; // Render null if not logged in
   }
 
   return (
@@ -31,15 +44,12 @@ const Navigation = () => {
         NBA Sportsbook
       </Typography>
         <ul className="nav-list" style={{ listStyle: "none", marginLeft: "auto"}}>
-          {/* <li>
-            <Link to="/listings" className="nav-item">Listings</Link>
+        <li>
+            <Link to="/login" onClick={deleteCookie} className="nav-item" style={{ textDecoration: "none", margin: "0 20px", fontFamily: "'He\\'s on Fire', sans-serif", color: "red", fontSize: "50px", WebkitTextStroke: "3px black", WebkitTextFillColor: "solid blue", display: "flex", flexDirection: "row"}}>History
+            </Link>
           </li>
-          {cookies["loggedIn"] ? <li>
-            <Link to="/addlisting" className="nav-item">Add</Link>
-          </li> : ""} */}
           <li>
-            <Link 
-            to="/login" onClick={deleteCookie} className="nav-item" style={{ textDecoration: "none", margin: "0 20px", fontFamily: "'He\\'s on Fire', sans-serif", color: "red", fontSize: "50px", WebkitTextStroke: "3px black", WebkitTextFillColor: "solid blue"}}>Logout
+            <Link to="/login" onClick={deleteCookie} className="nav-item" style={{ textDecoration: "none", margin: "0 20px", fontFamily: "'He\\'s on Fire', sans-serif", color: "red", fontSize: "50px", WebkitTextStroke: "3px black", WebkitTextFillColor: "solid blue", display: "flex", flexDirection: "row"}}>Logout
             </Link>
           </li>
         </ul>
