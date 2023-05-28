@@ -84,7 +84,7 @@ body {
     border-radius: 4px;
     padding: 16px;
     background-color: lightgrey;
-    margin-top: -5%;
+    margin-top: -12%;
   }
 
   .bets h2 {
@@ -133,3 +133,42 @@ body {
 .nav-list {
   display: flex;
 }
+
+.history-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10%;
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50vh;
+  border: 1px solid lightgrey;
+  border-radius: 4px;
+  padding: 16px;
+  padding-top: 3%;
+  background-color: lightgrey;
+  margin-top: -5%;
+}
+
+.history h2 {
+  margin-bottom: 3%;
+}
+
+.history-rows {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center; /* Horizontally center the items */
+}
+
+
+
+/* .bet-item {
+  width: calc(33.33% - 25px);
+} */
+

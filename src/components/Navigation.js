@@ -40,12 +40,12 @@ const Navigation = () => {
     <>
     <AppBar position="relative" className="nav-bar">
       <Toolbar className="nav-bar">
-      <Typography variant="h6" style={{ fontFamily: "'He\\'s on Fire', sans-serif", color: "red", fontSize: "50px", WebkitTextStroke: "3px black", WebkitTextFillColor: "solid blue" }}>
+      <Link to="/dashboard" style={{ fontFamily: "'He\\'s on Fire', sans-serif", color: "red", fontSize: "50px", WebkitTextStroke: "3px black", WebkitTextFillColor: "solid blue", textDecoration: "none" }}>
         NBA Sportsbook
-      </Typography>
+      </Link>
         <ul className="nav-list" style={{ listStyle: "none", marginLeft: "auto"}}>
         <li>
-            <Link to="/login" onClick={deleteCookie} className="nav-item" style={{ textDecoration: "none", margin: "0 20px", fontFamily: "'He\\'s on Fire', sans-serif", color: "red", fontSize: "50px", WebkitTextStroke: "3px black", WebkitTextFillColor: "solid blue", display: "flex", flexDirection: "row"}}>History
+            <Link to="/history" className="nav-item" style={{ textDecoration: "none", margin: "0 20px", fontFamily: "'He\\'s on Fire', sans-serif", color: "red", fontSize: "50px", WebkitTextStroke: "3px black", WebkitTextFillColor: "solid blue", display: "flex", flexDirection: "row"}}>History
             </Link>
           </li>
           <li>

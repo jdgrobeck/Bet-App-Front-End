@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router'
 import LogIn from './components/LogIn'
 import Register from './components/Register'
 import Games from './components/Games'
+import History from './components/History'
 import cookie from 'cookie'
 
 
@@ -37,6 +38,7 @@ const Router = () => {
             <Route path="/login" element={<LogIn />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<ProtectedRoute component={Games} />} />
+            <Route path="/history" element={<History />} />
         </Routes>    
             
     );

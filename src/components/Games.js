@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { format, parseISO, isToday, isAfter, startOfToday } from 'date-fns';
+import { format, parseISO, isAfter, startOfToday } from 'date-fns';
 import "../App.css";
 
 // const authToken = localStorage.getItem("authToken");
@@ -31,6 +31,8 @@ const [nba, setNba] = useState([]);
 const [selectedGame, setSelectedGame] = useState(null);
 const [awaySpread, setAwaySpread] = useState(null); // Added state for spread
 const [homeSpread, setHomeSpread] = useState(null); // Added state for spread
+const [awayOdds, setAwayOdds] = useState(null); 
+const [homeOdds, setHomeOdds] = useState(null); 
 const [bets, setBets] = useState([])
 // const [odds, setOdds] = useState([]);
 
@@ -72,16 +74,39 @@ let homeTeamBetData = null;
     //Why am I getting undefined without choosing a game?
   
     if (selectedGame) {
-      //Flipped [1]?.point ?? from home spread to away spread
-      const awaySpread = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[1]?.point ?? null;
-    setAwaySpread(awaySpread);
-
-    const homeSpread = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[0]?.point ?? null;
-    setHomeSpread(homeSpread);
+      const awaySpread = selectedGame?.bookmakers?.[0]?.markets?.[1]?.outcomes?.[0]?.point ?? null;
+      setAwaySpread(awaySpread);
+    
+      const homeSpread = selectedGame?.bookmakers?.[0]?.markets?.[1]?.outcomes?.[1]?.point ?? null;
+      setHomeSpread(homeSpread);
+    
+      const awayOdds = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[1]?.price ?? null;
+      const formattedAwayOdds = awayOdds > 0 ? `+${awayOdds}` : awayOdds; // Add "+" sign if positive
+      setAwayOdds(formattedAwayOdds);
+    
+      const homeOdds = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[0]?.price ?? null;
+      const formattedHomeOdds = homeOdds > 0 ? `+${homeOdds}` : homeOdds; // Add "+" sign if positive
+      setHomeOdds(formattedHomeOdds);
     } else {
       setAwaySpread(null);
       setHomeSpread(null);
+      setAwayOdds(null);
+      setHomeOdds(null);
     }
+
+//    if (selectedGame) {
+//   const awayOdds = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[0]?.price ?? null;
+//   setAwayOdds(awayOdds);
+
+//   const homeOdds = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[1]?.price ?? null;
+//   setHomeOdds(homeOdds);
+// } else {
+//   setAwayOdds(null);
+//   setHomeOdds(null);
+// }
+
+
+
 
     // homeTeamBetData = selectedGame ? {
     //   user_id: localStorage,
@@ -126,8 +151,12 @@ const handleWinnerPick = (event) => {
     // IT's sport_title in the API but sport in my db. Which one do I use?
     sport: selectedGame.sport_title,
     pick: selectedGame.home_team,
-    spread: homeSpread // assuming homeSpread is already set by the previous logic
+    odds: homeOdds,
+    spread: homeSpread,
+    result: "" // assuming homeSpread is already set by the previous logic
   } : null;
+
+  console.log(homeTeamBetData)
 
   awayTeamBetData = selectedGame ? {
     user_id: userId,
@@ -138,7 +167,9 @@ const handleWinnerPick = (event) => {
     away_team: selectedGame.away_team,
     sport: selectedGame.sport_title,
     pick: selectedGame.away_team,
-    spread: awaySpread // assuming awaySpread is already set by the previous logic
+    odds: awayOdds,
+    spread: awaySpread,
+    result: "" // assuming awaySpread is already set by the previous logic
   } : null;
   // This prevents page from loading automatically
   event.preventDefault()
@@ -225,8 +256,10 @@ return (
         {selectedGame && (
           <div>
             <h3>{`${selectedGame.away_team} @ ${selectedGame.home_team}`}</h3>
-            <p>Spread for {selectedGame.away_team}: {awaySpread}</p>
-            <p>Spread for {selectedGame.home_team}: {homeSpread}</p>
+            {/* <p>Spread for {selectedGame.away_team}: {awaySpread}</p> */}
+            <p>{selectedGame.away_team} odds: {awayOdds}</p>
+            {/* <p>Spread for {selectedGame.home_team}: {homeSpread}</p> */}
+            <p>{selectedGame.home_team} odds: {homeOdds}</p>
             <button value="away-team-pick" onClick={handleWinnerPick} className="selected-game-button">Pick {selectedGame.away_team}</button>
             <button value="home-team-pick" onClick={handleWinnerPick} className="selected-game-button">Pick {selectedGame.home_team}</button>
             {/* <p>Spread for {selectedGame.home_team}: {spread[1][2]}</p> */}
@@ -237,40 +270,32 @@ return (
     
 
     {/* This works, but the data in the fetched data is wrong */}
-    {bets && bets.some(bet => isAfter(parseISO(bet.commence_time), currentDate)) ? (
-      <div className="bets-container">
-        <div className="bets">
-          <h2>My Bets</h2>
-          {bets
-            // Might cut this out
-            // .filter((bet) => {
-            //   const currentDate = new Date();
-            //   const betDate = new Date(bet.commence_time);
-            //   return (
-            //     betDate.getDate() === currentDate.getDate() &&
-            //     betDate.getMonth() === currentDate.getMonth() &&
-            //     betDate.getFullYear() === currentDate.getFullYear()
-            //   );
-            // })
-            .map((bet, index) => {
-              const commenceTime = new Date(bet.commence_time);
-              const timeOptions = { hour: 'numeric', minute: 'numeric' };
-              const formattedTime = commenceTime.toLocaleTimeString([], timeOptions);
-              return (
-                <div key={index}>
-                  <h3>{bet.away_team} @ {bet.home_team}</h3>
-                  <p>Date: {commenceTime.toLocaleDateString()}, {formattedTime}</p>
-                  <p>Pick: {bet.pick}</p>
-                  <p>Spread: {bet.spread}</p>
-                  <div className="delete-bet-button">
-                    <button onClick={deleteBet} data-bet-id={bet.id}>Delete Bet</button>
-                  </div>
-                </div>
-              );
-            })}
-        </div>
-      </div>
-    ) : null }
+  {bets && bets.some(bet => isAfter(parseISO(bet.commence_time), currentDate)) ? (
+  <div className="bets-container">
+    <div className="bets">
+      <h2>My Bets</h2>
+      {bets
+        .filter(bet => isAfter(parseISO(bet.commence_time), currentDate)) // Filter bets based on commence_time
+        .map((bet, index) => {
+          const commenceTime = new Date(bet.commence_time);
+          const timeOptions = { hour: 'numeric', minute: 'numeric' };
+          const formattedTime = commenceTime.toLocaleTimeString([], timeOptions);
+          return (
+            <div key={index}>
+              <h3>{bet.away_team} @ {bet.home_team}</h3>
+              <p>Date: {commenceTime.toLocaleDateString()}, {formattedTime}</p>
+              <p>Pick: {bet.pick}</p>
+              {/* <p>Spread: {bet.spread}</p> */}
+              <p>Odds: {bet.odds > 0 ? `+${bet.odds}` : bet.odds}</p>
+              <div className="delete-bet-button">
+                <button onClick={deleteBet} data-bet-id={bet.id}>Delete Bet</button>
+              </div>
+            </div>
+          );
+        })}
+    </div>
+  </div>
+) : null }
   </div>
 );
 }
