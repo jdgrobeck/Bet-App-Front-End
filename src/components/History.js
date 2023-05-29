@@ -55,14 +55,14 @@ const History = () => {
         axios.get('https://capstone-planning.vercel.app/scores')
           .then(scoresResponse => {
             const scoresData = scoresResponse.data;
-            const updateBetsPromises = fetchedBets.map(bet => {
+            const updatedBets = fetchedBets.map(bet => {
               const game = scoresData.find(score => score.id === bet.game_id);
+              
+              let result = 'N/A';
   
               if (game && game.scores) {
                 const homeScore = parseInt(game.scores[0].score);
                 const awayScore = parseInt(game.scores[1].score);
-  
-                let result;
   
                 if (
                   (bet.pick === bet.home_team && homeScore > awayScore) ||
@@ -72,19 +72,17 @@ const History = () => {
                 } else {
                   result = 'L';
                 }
-  
-                // Clone the bet object and update only the result field
-                const updatedBet = { ...bet, result };
-  
-                return axios.put(`https://capstone-planning.vercel.app/bets/${bet.id}`, updatedBet);
-              } else {
-                return Promise.resolve(); // Skip updating this bet if scores are not available
               }
+  
+              return { ...bet, result };
             });
   
+            const updateBetsPromises = updatedBets.map(updatedBet =>
+              axios.put(`https://capstone-planning.vercel.app/bets/${updatedBet.id}`, updatedBet)
+            );
+  
             Promise.all(updateBetsPromises)
-              .then(updatedBetsResponses => {
-                const updatedBets = updatedBetsResponses.map(response => response.data);
+              .then(() => {
                 setBets(updatedBets);
               })
               .catch(error => {
@@ -93,6 +91,7 @@ const History = () => {
           });
       });
   }, [userId]);
+
 
   useEffect(() => {
     if (bets) {
