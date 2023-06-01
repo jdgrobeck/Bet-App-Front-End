@@ -58,7 +58,7 @@ const History = () => {
             const updatedBets = fetchedBets.map(bet => {
               const game = scoresData.find(score => score.id === bet.game_id);
               
-              let result = 'N/A';
+              let result = bet.result;
   
               if (game && game.scores) {
                 const homeScore = parseInt(game.scores[0].score);
@@ -77,11 +77,11 @@ const History = () => {
               return { ...bet, result };
             });
   
-            const updateBetsPromises = updatedBets.map(updatedBet =>
-              axios.put(`https://capstone-planning.vercel.app/bets/${updatedBet.id}`, updatedBet)
+            const updatedBetsPromises = updatedBets.map(fetchedBet =>
+              axios.put(`https://capstone-planning.vercel.app/bets/${fetchedBet.id}`, fetchedBet)
             );
   
-            Promise.all(updateBetsPromises)
+            Promise.all(updatedBetsPromises)
               .then(() => {
                 setBets(updatedBets);
               })

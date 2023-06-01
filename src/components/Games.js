@@ -74,10 +74,10 @@ let homeTeamBetData = null;
     //Why am I getting undefined without choosing a game?
   
     if (selectedGame) {
-      const awaySpread = selectedGame?.bookmakers?.[0]?.markets?.[1]?.outcomes?.[0]?.point ?? null;
+      const awaySpread = selectedGame?.bookmakers?.[0]?.markets?.[1]?.outcomes?.[1]?.point ?? null;
       setAwaySpread(awaySpread);
     
-      const homeSpread = selectedGame?.bookmakers?.[0]?.markets?.[1]?.outcomes?.[1]?.point ?? null;
+      const homeSpread = selectedGame?.bookmakers?.[0]?.markets?.[1]?.outcomes?.[0]?.point ?? null;
       setHomeSpread(homeSpread);
     
       const awayOdds = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[1]?.price ?? null;
