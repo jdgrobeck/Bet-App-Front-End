@@ -168,6 +168,14 @@ body {
   align-items: center;  */
 }
 
+.history-rows-odd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+  align-items: center;
+}
+
 
 
 .bet-item {
