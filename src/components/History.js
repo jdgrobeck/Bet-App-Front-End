@@ -133,7 +133,7 @@ const History = () => {
           <div className="history">
             <h2>History</h2>
             <h3>Record: {wins} - {losses}</h3>
-            <div className={bets.length % 2 ? 'history-rows-odd' : 'history-rows'}>
+            <div className={bets.some(bet => isBefore(parseISO(bet.commence_time), currentDate)) % 2 ? 'history-rows-odd' : 'history-rows'}>
               {bets
                .filter(bet => isBefore(parseISO(bet.commence_time), currentDate))
                .sort((a, b) => new Date(b.commence_time) - new Date(a.commence_time)) // Sort bets by most recent commenceTime
