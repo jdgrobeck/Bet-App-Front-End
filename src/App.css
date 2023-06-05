@@ -160,12 +160,10 @@ body {
   margin-bottom: 3%;
 }
 
-.history-rows {
+/* .history-rows {
   display: flex;
   flex-wrap: wrap;
   gap: 25px;
-  /* justify-content: space-between;
-  align-items: center;  */
 }
 
 .history-rows-odd {
@@ -174,9 +172,24 @@ body {
   gap: 25px;
   justify-content: center;
   align-items: center;
+} */
+
+.history-rows {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 25px;
 }
 
+.history-rows-odd {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 25px;
+  justify-items: center;
+}
 
+/* .history-rows-odd .bet-item:last-child {
+  grid-column: 1 / span 2;
+} */
 
 .bet-item {
   background-color: rgba(236, 236, 236, 0.762);

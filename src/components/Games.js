@@ -80,11 +80,11 @@ let homeTeamBetData = null;
       const homeSpread = selectedGame?.bookmakers?.[0]?.markets?.[1]?.outcomes?.[0]?.point ?? null;
       setHomeSpread(homeSpread);
     
-      const awayOdds = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[1]?.price ?? null;
+      const awayOdds = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[0]?.price ?? null;
       const formattedAwayOdds = awayOdds > 0 ? `+${awayOdds}` : awayOdds; // Add "+" sign if positive
       setAwayOdds(formattedAwayOdds);
     
-      const homeOdds = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[0]?.price ?? null;
+      const homeOdds = selectedGame?.bookmakers?.[0]?.markets?.[0]?.outcomes?.[1]?.price ?? null;
       const formattedHomeOdds = homeOdds > 0 ? `+${homeOdds}` : homeOdds; // Add "+" sign if positive
       setHomeOdds(formattedHomeOdds);
     } else {
