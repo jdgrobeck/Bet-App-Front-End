@@ -160,7 +160,7 @@ body {
   margin-bottom: 3%;
 }
 
-/* .history-rows {
+.history-rows {
   display: flex;
   flex-wrap: wrap;
   gap: 25px;
@@ -172,9 +172,9 @@ body {
   gap: 25px;
   justify-content: center;
   align-items: center;
-} */
+}
 
-.history-rows {
+/* .history-rows {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 25px;
@@ -185,7 +185,7 @@ body {
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 25px;
   justify-items: center;
-}
+} */
 
 /* .history-rows-odd .bet-item:last-child {
   grid-column: 1 / span 2;
